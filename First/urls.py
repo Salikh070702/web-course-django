@@ -30,4 +30,5 @@ urlpatterns = [
     # path('update-user/<int:pk>', update_view, name="user_update"),
     path('users', users_view, name="users"),
     path('', home, name="home"),
+    path('more/', include('extra.urls', namespace='extra')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

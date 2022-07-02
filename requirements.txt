@@ -1,0 +1,16 @@
+# birinchi githubdan new repo
+# keyin u yerda nima qilish kerakligi ketma ket ko'rsatilgan
+# Asosiysi media papka, yani saytga yuklanadigan vido yoki document
+# fayllar gitda saqlanishi kerakmas, ularni .gitignore faylga qo'shib
+# qo'yishimiz kerak.
+
+
+asgiref==3.5.1
+bleach==5.0.0
+Django==3.2
+django-summernote==0.8.20.0
+Pillow==9.1.0
+pytz==2022.1
+six==1.16.0
+sqlparse==0.4.2
+webencodings==0.5.1
