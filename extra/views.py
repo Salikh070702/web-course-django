@@ -1,8 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.views.generic import  ListView
-
 # Create your views here.
 from .models import Gallery, ImgCategory
+
+
+# def my_view(request):
+#     return HttpResponse("Result from function based view")
+
+
+
+# def MyView(View):
+#    def get(self, request):
+#         return HttpResponse("Result from class based view")
+
+
+
+
 
 
 

@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render, get_object_or_404 
 from django.http import JsonResponse
 
+from django.views.generic import  ListView, CreateView, DeleteView 
+
 from .models import New, Comment, Like, Dislike
 from .forms import NewForm, NewFormMine, CommentForm
 
@@ -9,6 +11,7 @@ def news_list(request):
     # context deckaretion bu tempilrtga berib yuboriladigan o'zgaruvchilar to'plami
     context = {'news': news} 
     return render(request, 'new/news_list.html', context)
+   
 
     # bunyirda new methodidagi barcha objekit, yangi ikki yoki uc kundan ortiq 
     # objekitni odik 
@@ -16,6 +19,25 @@ def news_list(request):
     # quereset ucun model method iwlamaydi
     
     # contex dictionary  bu tempilitga berib yuboriladingn ozgaruvcilar toplami   
+
+
+# class ListView(View):
+#     model = None
+#     template_name = None
+
+#     def get_queryset(self):
+#         return self.model.objects.all()
+
+#     def get(self, request):
+#         return render(request, self.template_name, {"news": self.get_queryset()})
+
+
+class News(ListView):
+    queryset = New.objects.all().order_by('-created')
+    template_name = 'new/news_list.html'
+    paginate_by: int = 3 
+
+news_list = News.as_view()
 
 
 def news_detail(request, id):
@@ -38,23 +60,51 @@ def news_detail(request, id):
             return redirect("new:detail", id=id)
     return render(request, 'new/news_detail.html', {'new': new, "form": form})
 
-def create(request):
-    form = NewForm
-    if request.method == 'POST':
-        form = NewForm(request.POST, request.FILES)
-        if form.is_valid():
-            new = form.save()
-            return redirect("new:list")
-    return render(request, 'new/create.html', {"form": form})
+class NewCreate(CreateView):
+    model = New
+    form_class = NewForm
 
-def remove(request, id):
-    new = get_object_or_404(New, id=id)
-    new.delete()
-    return redirect("new:list")
 
-def my_news(request):
-    news = New.objects.filter(author=request.user).order_by('-created')
-    return render(request, 'new/my_news.html', {'news': news})
+create = NewCreate.as_view()
+
+# def create(request):
+#     form = NewForm
+#     if request.method == 'POST':
+#         form = NewForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             new = form.save()
+#             return redirect("new:list")
+#     return render(request, 'new/create.html', {"form": form})
+
+class RemoveView(DeleteView):
+    model = New 
+    cuccess_url: str = "/news/my-news/"
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+remove = RemoveView.as_view()
+
+# def remove(request, id):
+#     new = get_object_or_404(New, id=id)
+#     new.delete()
+#     return redirect("new:list")
+
+class MyNevs(ListView):
+    queryset = New.objects.all().order_by('-created')
+    template_name: str = 'new/my_news.html'
+
+    def quereset(self):
+        return self.model,objects.filter(author=self.request.user).order_by('-created')
+
+my_news = MyNevs.as_view()
+
+
+
+
+# def my_news(request):
+#     news = New.objects.filter(author=request.user).order_by('-created')
+#     return render(request, 'new/my_news.html', {'news': news})
 
 
 def my_create(request):

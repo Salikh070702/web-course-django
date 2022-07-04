@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.urls import reverse
 
 
 class New(models.Model):
@@ -23,6 +24,8 @@ class New(models.Model):
     def __str__(self):
         return self .title
 
+def get_absolute_url(self):
+    return reverse("news:list")
 
     def dislike_count(self):
         return self.dislikes.count()
